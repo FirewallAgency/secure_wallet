@@ -1,0 +1,38 @@
+# Dépendances
+/node_modules
+
+# Environnement
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Couverture de test
+/coverage
+
+# Fichiers temporaires
+/tmp
+/temp
+
+# Fichiers de build
+/dist
+/build
+
+# Certificats et clés
+*.pem
+*.key
+*.cert
+*.crt
+
+# Fichiers de données
+/data
+/uploads
+
+# Fichiers de configuration locaux
+config.local.js

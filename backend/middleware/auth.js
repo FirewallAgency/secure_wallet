@@ -1,21 +1,25 @@
 const jwt = require('jsonwebtoken');
 
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+module.exports = (req, res, next) => {
+  // Récupérer le token du header Authorization
+  const authHeader = req.headers.authorization;
   
-  if (!token) {
-    return res.status(401).json({ error: 'Accès non autorisé' });
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'Accès non autorisé. Token manquant.' });
   }
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
-      return res.status(403).json({ error: 'Token invalide ou expiré' });
-    }
+  
+  const token = authHeader.split(' ')[1];
+  
+  try {
+    // Vérifier le token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-    req.user = user;
+    // Ajouter les informations de l'utilisateur à l'objet request
+    req.user = decoded;
+    
     next();
-  });
+  } catch (error) {
+    console.error('Erreur d\'authentification:', error);
+    res.status(401).json({ message: 'Token invalide ou expiré' });
+  }
 };
-
-module.exports = { authenticateToken };

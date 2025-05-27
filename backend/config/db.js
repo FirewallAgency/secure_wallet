@@ -1,6 +1,9 @@
 const mysql = require('mysql2/promise');
+const dotenv = require('dotenv');
 
-// Utilisation de pool de connexions pour une meilleure performance
+dotenv.config();
+
+// Créer un pool de connexions
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -10,5 +13,15 @@ const pool = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0
 });
+
+// Tester la connexion
+pool.getConnection()
+  .then(connection => {
+    console.log('Connexion à la base de données établie avec succès');
+    connection.release();
+  })
+  .catch(err => {
+    console.error('Erreur de connexion à la base de données:', err);
+  });
 
 module.exports = pool;
